@@ -1,0 +1,322 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #040814;
+  --bg-2: #070D1E;
+  --bg-3: #0A1326;
+  --fg: #F5F8FF;
+  --fg-muted: #8FA1C7;
+  --border: rgba(110, 145, 200, 0.16);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #050A18;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #1B2D52, #142342);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #2B6BE6, #1A3FA1);
+}
+
+/* Selection */
+::selection {
+  background: rgba(43, 107, 230, 0.4);
+  color: #fff;
+}
+
+/* Glass card utility */
+@layer components {
+  .glass {
+    @apply bg-white/[.025] backdrop-blur-xl border border-white/[.06] rounded-2xl;
+  }
+  .glass-strong {
+    @apply bg-white/[.04] backdrop-blur-2xl border border-white/[.08] rounded-2xl;
+  }
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-300 via-accent-cyan to-brand-200;
+  }
+  .gradient-text-soft {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-brand-100 to-brand-300;
+  }
+  .container-q {
+    @apply max-w-7xl mx-auto px-6 lg:px-10;
+  }
+  .section-pad {
+    @apply py-24 md:py-32;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-medium tracking-tight transition-all duration-200 select-none;
+  }
+  .btn-primary {
+    @apply btn bg-gradient-to-r from-brand-600 to-brand-400 text-white shadow-glow-brand hover:from-brand-500 hover:to-brand-300 hover:-translate-y-0.5;
+  }
+  .btn-ghost {
+    @apply btn bg-white/[.04] border border-white/[.10] text-white hover:bg-white/[.08] hover:border-white/[.18];
+  }
+  .btn-outline {
+    @apply btn border border-brand-500/40 text-brand-200 hover:bg-brand-500/10 hover:border-brand-400/60;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium tracking-wide;
+  }
+  .badge-brand {
+    @apply badge bg-brand-500/10 text-brand-200 border border-brand-500/30;
+  }
+  .badge-cyan {
+    @apply badge bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30;
+  }
+  .surface {
+    @apply bg-ink-850/60 border border-white/[.06] rounded-2xl backdrop-blur-md;
+  }
+  .surface-hover {
+    @apply transition-all duration-300 hover:border-brand-500/40 hover:shadow-glow-brand hover:-translate-y-1;
+  }
+  .surface-strong {
+    @apply bg-white/[.04] border border-white/[.10] rounded-3xl backdrop-blur-2xl;
+  }
+
+  /* ─── Glassmorphism vibrante ─── */
+  .glass-vibrant {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  .glass-vibrant-strong {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(36px) saturate(200%);
+    -webkit-backdrop-filter: blur(36px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow:
+      0 12px 48px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* ─── Burbujas de gradiente para fondo vibrante ─── */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+  opacity: 0.55;
+  will-change: transform;
+}
+.blob-violet {
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.85), rgba(167, 139, 250, 0) 70%);
+}
+.blob-cyan {
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.75), rgba(34, 211, 238, 0) 70%);
+}
+.blob-magenta {
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.75), rgba(236, 72, 153, 0) 70%);
+}
+.blob-blue {
+  background: radial-gradient(circle, rgba(43, 107, 230, 0.85), rgba(43, 107, 230, 0) 70%);
+}
+
+@keyframes blob-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.08); }
+  66% { transform: translate(-25px, 20px) scale(0.95); }
+}
+@keyframes blob-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, 30px) scale(1.1); }
+}
+@keyframes blob-float-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(35px, 25px) scale(0.92); }
+}
+
+.blob-anim-1 { animation: blob-float-1 14s ease-in-out infinite; }
+.blob-anim-2 { animation: blob-float-2 18s ease-in-out infinite; }
+.blob-anim-3 { animation: blob-float-3 16s ease-in-out infinite; }
+
+/* Estilos para páginas legales */
+.legal-content {
+  color: rgba(245, 248, 255, 0.78);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.legal-content h2 {
+  color: #fff;
+  font-family: var(--font-display, 'Space Grotesk'), system-ui, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.legal-content h2:first-child {
+  margin-top: 0;
+}
+.legal-content h3 {
+  color: rgba(245, 248, 255, 0.92);
+  font-family: var(--font-display, 'Space Grotesk'), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.legal-content p {
+  margin-bottom: 0.85rem;
+}
+.legal-content ul, .legal-content ol {
+  margin: 0.5rem 0 1rem 0;
+  padding-left: 1.5rem;
+}
+.legal-content ul {
+  list-style: none;
+  padding-left: 0;
+}
+.legal-content ul li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.45rem;
+}
+.legal-content ul li::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 0.65rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgb(74, 134, 232);
+}
+.legal-content ol {
+  list-style: decimal;
+  list-style-position: outside;
+  padding-left: 1.5rem;
+}
+.legal-content ol li {
+  margin-bottom: 0.4rem;
+  padding-left: 0.25rem;
+}
+.legal-content ol li::marker {
+  color: rgb(110, 145, 200);
+  font-weight: 600;
+}
+.legal-content a {
+  color: rgb(110, 169, 245);
+  text-decoration: underline;
+  text-decoration-color: rgba(110, 169, 245, 0.4);
+  text-underline-offset: 3px;
+  transition: all 0.2s;
+}
+.legal-content a:hover {
+  color: rgb(165, 200, 255);
+  text-decoration-color: rgba(165, 200, 255, 0.8);
+}
+.legal-content strong {
+  color: #fff;
+  font-weight: 600;
+}
+.legal-content .legal-callout {
+  background: rgba(43, 107, 230, 0.08);
+  border: 1px solid rgba(43, 107, 230, 0.25);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-size: 14px;
+}
+.legal-content .legal-callout strong {
+  color: rgb(165, 200, 255);
+}
+
+/* Animated grid background */
+.bg-tech-grid {
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(43, 107, 230, 0.12), transparent 40%),
+    radial-gradient(circle at 80% 50%, rgba(34, 211, 238, 0.08), transparent 40%),
+    linear-gradient(rgba(74, 134, 232, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 134, 232, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 56px 56px, 56px 56px;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
+
+/* Mask utilities for fading edges */
+.mask-fade-bottom {
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+/* Fancy shimmer line */
+.shimmer-line {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+  transform: translateX(-100%);
+  animation: shimmer 2.5s linear infinite;
+}
+
+/* ═══════════════════════════════════════════
+   QUUANTICA Logo — Aros orbitales animados
+   ═══════════════════════════════════════════ */
+@keyframes qav-orb1 {
+  from { transform: rotateX(75deg) rotateZ(0deg); }
+  to   { transform: rotateX(75deg) rotateZ(360deg); }
+}
+@keyframes qav-orb2 {
+  from { transform: rotateX(75deg) rotateY(60deg)  rotateZ(0deg); }
+  to   { transform: rotateX(75deg) rotateY(60deg)  rotateZ(360deg); }
+}
+@keyframes qav-orb3 {
+  from { transform: rotateX(75deg) rotateY(120deg) rotateZ(0deg); }
+  to   { transform: rotateX(75deg) rotateY(120deg) rotateZ(360deg); }
+}
+.qav-ring {
+  position: absolute;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  top: 50%; left: 50%;
+  pointer-events: none;
+}
+.qav-r1 { animation: qav-orb1 2.8s linear infinite; }
+.qav-r2 { animation: qav-orb2 4.2s linear infinite reverse; }
+.qav-r3 { animation: qav-orb3 5.8s linear infinite; }
+
+/* Subtle noise overlay */
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.04 0 0 0 0 0.07 0 0 0 0 0.16 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
