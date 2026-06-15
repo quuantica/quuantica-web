@@ -20,6 +20,9 @@ const jetBrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://quuantica.com'),
+  verification: {
+    google: '6vbXYC4br0mvTSrFzUkymq6aceDzXQr92eiR_61NGHc',
+  },
   title: {
     default: 'QUUANTICA — Servicios Tecnológicos Empresariales',
     template: '%s | QUUANTICA',
