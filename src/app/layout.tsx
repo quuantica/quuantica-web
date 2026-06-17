@@ -76,6 +76,48 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const schemaOrg = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'QUUANTICA Servicios Tecnológicos',
+  url: 'https://quuantica.com',
+  logo: 'https://quuantica.com/favicon.svg',
+  description:
+    'QUUANTICA implementa Sistemas de Gestión SST, auditorías, plan vial, normativa legal y sistemas de calidad para empresas colombianas. Plataforma tecnológica 100% web con capacitaciones digitales certificadas.',
+  telephone: '+573167998542',
+  email: 'quuantica@outlook.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Chía',
+    addressRegion: 'Sabana Norte',
+    addressCountry: 'CO',
+  },
+  areaServed: 'Colombia',
+  sameAs: [
+    'https://www.instagram.com/quuantica2026/',
+    'https://www.linkedin.com/in/isnardo-carmona-ram%C3%ADrez-6670b3417/',
+    'https://www.facebook.com/profile.php?id=61590527382342',
+  ],
+  founder: {
+    '@type': 'Person',
+    name: 'Isnardo Carmona Ramírez',
+    jobTitle: 'Gerente',
+    sameAs: 'https://www.linkedin.com/in/isnardo-carmona-ram%C3%ADrez-6670b3417/',
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Servicios QUUANTICA',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Implementación Sistema de Gestión SST' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Auditorías SST' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Plan Vial' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Normativa Legal Laboral' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Sistemas de Calidad' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Capacitaciones Digitales Certificadas' } },
+    ],
+  },
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -86,6 +128,12 @@ export default function RootLayout({
       lang="es"
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetBrains.variable}`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+        />
+      </head>
       <body className="font-sans antialiased bg-mesh-gradient">{children}</body>
     </html>
   );
