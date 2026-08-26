@@ -16,6 +16,7 @@ import {
 import BackgroundGrid from './BackgroundGrid';
 import ParticleNetwork from './ParticleNetwork';
 import Logo from './Logo';
+import IngresoClientes from './IngresoClientes';
 import { sfx } from '@/lib/sounds';
 import { QUUANTICA } from '@/lib/config';
 
@@ -31,83 +32,91 @@ export default function Hero() {
       <ParticleNetwork intensity="medium" palette="brand" />
 
       <div className="container-q relative z-10">
-        {/* Bloque superior: texto centrado */}
-        <div className="text-center max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="badge-brand mb-6 inline-flex"
-          >
-            <Sparkles size={14} />
-            Plataforma empresarial de nueva generación
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="font-display text-2xl md:text-3xl lg:text-4xl font-bold leading-[1.15] tracking-tight"
-          >
-            Tecnología empresarial.{' '}
-            <span className="gradient-text-soft">Inteligencia aplicada.</span>{' '}
-            <span className="gradient-text">Cumplimiento garantizado.</span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-5 max-w-3xl mx-auto text-base md:text-lg text-brand-100/75 leading-relaxed"
-          >
-            QUUANTICA construye plataformas tecnológicas que centralizan la gestión
-            SG-SST, automatizan procesos críticos con inteligencia artificial y
-            fortalecen el cumplimiento normativo en empresas e instituciones.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45 }}
-            className="mt-9 flex flex-wrap gap-3 justify-center"
-          >
-            <a
-              href="#agendar"
-              onClick={() => sfx.click()}
-              onMouseEnter={() => sfx.hover()}
-              className="btn-primary"
+        {/* Bloque superior: ventana de ingreso (izq, bajo el logo) + texto (der) */}
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+          {/* Texto — a la derecha en escritorio */}
+          <div className="text-center lg:text-left max-w-2xl mx-auto lg:mx-0 lg:order-2">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="badge-brand mb-6 inline-flex"
             >
-              Agendar demostración
-              <ArrowRight size={18} />
-            </a>
-            <a
-              href={wa}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => sfx.click()}
-              onMouseEnter={() => sfx.hover()}
-              className="btn-ghost"
-            >
-              <MessageCircle size={18} />
-              Contactar por WhatsApp
-            </a>
-          </motion.div>
+              <Sparkles size={14} />
+              Plataforma empresarial de nueva generación
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-brand-100/60"
-          >
-            <div className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-accent-emerald" />
-              Compatible con Decreto 1072 y Resolución 0312
-            </div>
-            <div className="flex items-center gap-2">
-              <Sparkles size={16} className="text-accent-cyan" />
-              IA generativa integrada
-            </div>
-          </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.15 }}
+              className="font-display text-2xl md:text-3xl lg:text-4xl font-bold leading-[1.15] tracking-tight"
+            >
+              Tecnología empresarial.{' '}
+              <span className="gradient-text-soft">Inteligencia aplicada.</span>{' '}
+              <span className="gradient-text">Cumplimiento garantizado.</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="mt-5 max-w-3xl mx-auto lg:mx-0 text-base md:text-lg text-brand-100/75 leading-relaxed"
+            >
+              QUUANTICA construye plataformas tecnológicas que centralizan la gestión
+              SG-SST, automatizan procesos críticos con inteligencia artificial y
+              fortalecen el cumplimiento normativo en empresas e instituciones.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.45 }}
+              className="mt-9 flex flex-wrap gap-3 justify-center lg:justify-start"
+            >
+              <a
+                href="#agendar"
+                onClick={() => sfx.click()}
+                onMouseEnter={() => sfx.hover()}
+                className="btn-primary"
+              >
+                Agendar demostración
+                <ArrowRight size={18} />
+              </a>
+              <a
+                href={wa}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => sfx.click()}
+                onMouseEnter={() => sfx.hover()}
+                className="btn-ghost"
+              >
+                <MessageCircle size={18} />
+                Contactar por WhatsApp
+              </a>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-3 text-sm text-brand-100/60"
+            >
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={16} className="text-accent-emerald" />
+                Compatible con Decreto 1072 y Resolución 0312
+              </div>
+              <div className="flex items-center gap-2">
+                <Sparkles size={16} className="text-accent-cyan" />
+                IA generativa integrada
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Ventana de ingreso — a la izquierda en escritorio, bajo el logo */}
+          <div className="lg:order-1">
+            <IngresoClientes />
+          </div>
         </div>
 
         {/* Bloque inferior: dos cuadros lado a lado con burbujas vibrantes detrás */}
