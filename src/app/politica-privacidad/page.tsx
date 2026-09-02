@@ -12,7 +12,7 @@ export default function PoliticaPrivacidadPage() {
     <LegalPage
       title="Política de privacidad"
       subtitle="Cómo recolectamos, usamos y protegemos tu información cuando interactúas con QUUANTICA Servicios Tecnológicos."
-      updatedAt="10 de mayo de 2026"
+      updatedAt="2 de septiembre de 2026"
     >
       <div className="legal-callout">
         <strong>Resumen rápido:</strong> En QUUANTICA respetamos tu privacidad. Solo
@@ -43,7 +43,7 @@ export default function PoliticaPrivacidadPage() {
       <h2>2. Marco legal aplicable</h2>
       <p>
         Esta política se rige por la <strong>Ley 1581 de 2012</strong> (Régimen General
-        de Protección de Datos Personales), el <strong>Decreto 1377 de 2013</strong>{' '}
+        de Protección de Datos Personales), el <strong>Decreto 1074 de 2015</strong>{' '}
         que la reglamenta, y demás normas concordantes vigentes en la República de
         Colombia.
       </p>

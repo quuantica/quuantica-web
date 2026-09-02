@@ -12,7 +12,7 @@ export default function TerminosCondicionesPage() {
     <LegalPage
       title="Términos y condiciones"
       subtitle="Condiciones generales de uso del sitio web y la plataforma de QUUANTICA Servicios Tecnológicos."
-      updatedAt="10 de mayo de 2026"
+      updatedAt="2 de septiembre de 2026"
     >
       <h2>1. Aceptación de los términos</h2>
       <p>
@@ -125,7 +125,7 @@ export default function TerminosCondicionesPage() {
       <p>
         Estos términos se rigen por las leyes de la <strong>República de Colombia</strong>.
         Cualquier controversia será sometida a la jurisdicción de los jueces y
-        tribunales competentes de la ciudad de <strong>Chía, Cundinamarca</strong>,
+        tribunales competentes de la ciudad de <strong>Cajicá, Cundinamarca</strong>,
         renunciando las partes a cualquier otro fuero que pudiera corresponderles.
       </p>
 

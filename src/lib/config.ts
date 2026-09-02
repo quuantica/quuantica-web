@@ -11,7 +11,7 @@ export const QUUANTICA = {
     emailComercial: 'quuantica@outlook.com',
     whatsapp: '573167998542', // Formato internacional sin +
     whatsappDisplay: '+57 316 799 8542',
-    direccion: 'Chía, Cundinamarca, Colombia',
+    direccion: 'Cajicá, Cundinamarca, Colombia',
   },
   social: {
     linkedin: 'https://linkedin.com/company/quuantica',
