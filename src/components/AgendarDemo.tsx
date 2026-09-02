@@ -388,7 +388,16 @@ export default function AgendarDemo() {
                   </div>
 
                   <div className="text-xs text-brand-100/45 mt-2">
-                    Al continuar aceptas el tratamiento de datos según Ley 1581/2012.
+                    Al continuar aceptas el{' '}
+                    <a
+                      href="/tratamiento-datos"
+                      target="_blank"
+                      rel="noopener"
+                      className="underline hover:text-brand-200"
+                    >
+                      tratamiento de datos personales
+                    </a>{' '}
+                    según la Ley 1581 de 2012.
                   </div>
                 </motion.div>
               )}
