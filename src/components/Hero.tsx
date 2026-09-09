@@ -17,6 +17,7 @@ import BackgroundGrid from './BackgroundGrid';
 import ParticleNetwork from './ParticleNetwork';
 import Logo from './Logo';
 import IngresoClientes from './IngresoClientes';
+import AmorAmistad from './AmorAmistad';
 import { sfx } from '@/lib/sounds';
 import { QUUANTICA } from '@/lib/config';
 
@@ -32,8 +33,8 @@ export default function Hero() {
       <ParticleNetwork intensity="medium" palette="brand" />
 
       <div className="container-q relative z-10">
-        {/* Bloque superior: ventana de ingreso (izq, bajo el logo) + texto (der) */}
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+        {/* Bloque superior: (Amor y Amistad + ventana de ingreso) a la izquierda, texto a la derecha */}
+        <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-12 items-center">
           {/* Texto — a la derecha en escritorio */}
           <div className="text-center lg:text-left max-w-2xl mx-auto lg:mx-0 lg:order-2">
             <motion.div
@@ -113,8 +114,9 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Ventana de ingreso — a la izquierda en escritorio, bajo el logo */}
-          <div className="lg:order-1">
+          {/* Amor y Amistad (izquierda) + Ventana de ingreso (corrida a la derecha) */}
+          <div className="lg:order-1 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-6">
+            <AmorAmistad />
             <IngresoClientes />
           </div>
         </div>
