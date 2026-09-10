@@ -13,6 +13,7 @@ import Seguridad from '@/components/Seguridad';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import AIChatButton from '@/components/AIChatButton';
+import SpotyPlayer from '@/components/SpotyPlayer';
 
 export default function HomePage() {
   return (
@@ -32,6 +33,7 @@ export default function HomePage() {
       <Footer />
       <WhatsAppButton />
       <AIChatButton />
+      <SpotyPlayer />
     </main>
   );
 }
