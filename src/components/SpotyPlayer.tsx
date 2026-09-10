@@ -10,11 +10,13 @@ import { useEffect, useRef, useState } from 'react';
  */
 const API = 'https://app.quuantica.com';
 
-export default function SpotyPlayer() {
-  const [open, setOpen] = useState(false);
+export default function SpotyPlayer({ asPage = false }: { asPage?: boolean }) {
+  const [open, setOpen] = useState(asPage);
   const [token, setToken] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
+  const [codigo, setCodigo] = useState('');
+  const [mfa, setMfa] = useState(false);
   const [err, setErr] = useState('');
   const [cargando, setCargando] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -23,18 +25,21 @@ export default function SpotyPlayer() {
     try { const t = localStorage.getItem('spq_token'); if (t) setToken(t); } catch {}
     const onOpen = () => setOpen(true);
     window.addEventListener('spq-open', onOpen);
-    (window as any).__spqClose = () => setOpen(false);
+    (window as any).__spqClose = () => { if (!asPage) setOpen(false); };
+    if (asPage && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw-spoty.js').catch(() => {});
+    }
     return () => window.removeEventListener('spq-open', onOpen);
-  }, []);
+  }, [asPage]);
 
   useEffect(() => {
     if (!open || !token || !boxRef.current) return;
     const cleanup = montarPlayer(boxRef.current, token, () => {
       try { localStorage.removeItem('spq_token'); } catch {}
       setToken(null);
-    });
+    }, asPage);
     return cleanup;
-  }, [open, token]);
+  }, [open, token, asPage]);
 
   async function login(e?: React.FormEvent) {
     if (e) e.preventDefault();
@@ -42,13 +47,16 @@ export default function SpotyPlayer() {
     try {
       const r = await fetch(API + '/api/login', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password: pass }),
+        body: JSON.stringify({ email: email.trim(), password: pass, codigo: codigo.trim() || undefined }),
       });
       const j = await r.json();
       if (r.ok && j.token) {
         if (j.usuario?.rol !== 'admin') { setErr('Este reproductor es solo para tu cuenta de administrador.'); setCargando(false); return; }
         try { localStorage.setItem('spq_token', j.token); } catch {}
-        setToken(j.token); setPass('');
+        setToken(j.token); setPass(''); setCodigo(''); setMfa(false);
+      } else if (j.mfaRequerido) {
+        setMfa(true);
+        setErr(codigo.trim() ? (j.error || 'El código no es correcto') : '');
       } else setErr(j.error || 'No se pudo ingresar');
     } catch { setErr('No hay conexión con el servidor'); }
     setCargando(false);
@@ -58,8 +66,8 @@ export default function SpotyPlayer() {
 
   return (
     <div
-      onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
-      style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,.62)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', fontFamily: 'system-ui,sans-serif' }}
+      onClick={(e) => { if (!asPage && e.target === e.currentTarget) setOpen(false); }}
+      style={{ position: 'fixed', inset: 0, zIndex: 9999, background: asPage ? '#0a0d10' : 'rgba(0,0,0,.62)', display: 'flex', alignItems: asPage ? 'stretch' : 'center', justifyContent: 'center', padding: asPage ? 0 : '1rem', fontFamily: 'system-ui,sans-serif' }}
     >
       {!token ? (
         <form onSubmit={login} style={{ background: '#0e1114', border: '1px solid rgba(29,185,84,.3)', borderRadius: 16, width: '100%', maxWidth: 340, padding: '1.4rem 1.3rem', color: '#e8eef0', boxShadow: '0 30px 80px -30px #000' }}>
@@ -70,23 +78,32 @@ export default function SpotyPlayer() {
             style={{ width: '100%', padding: '10px 12px', marginBottom: 8, borderRadius: 9, border: '1px solid #2a3138', background: '#0a0d10', color: '#eee', fontSize: 13, boxSizing: 'border-box' }} />
           <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="Contraseña" autoComplete="current-password"
             style={{ width: '100%', padding: '10px 12px', marginBottom: 10, borderRadius: 9, border: '1px solid #2a3138', background: '#0a0d10', color: '#eee', fontSize: 13, boxSizing: 'border-box' }} />
+          {mfa && (
+            <>
+              <div style={{ fontSize: 10.5, color: '#8aa', marginBottom: 6 }}>Tu cuenta pide segundo factor. Abre tu app de autenticación (Google Authenticator / Authy) y escribe el código de 6 dígitos.</div>
+              <input value={codigo} onChange={(e) => setCodigo(e.target.value.replace(/\D/g, '').slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" placeholder="Código de 6 dígitos"
+                style={{ width: '100%', padding: '10px 12px', marginBottom: 10, borderRadius: 9, border: '1px solid #1DB954', background: '#0a0d10', color: '#eee', fontSize: 15, letterSpacing: '.3em', textAlign: 'center', boxSizing: 'border-box' }} />
+            </>
+          )}
           {err && <div style={{ fontSize: 11, color: '#f88', marginBottom: 8 }}>{err}</div>}
           <button type="submit" disabled={cargando}
             style={{ width: '100%', padding: 11, borderRadius: 10, border: 'none', background: '#1DB954', color: '#04210f', fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>
             {cargando ? 'Entrando…' : 'Entrar a mi música'}
           </button>
-          <button type="button" onClick={() => setOpen(false)}
-            style={{ width: '100%', padding: 8, marginTop: 8, borderRadius: 9, border: '1px solid #2a3138', background: 'none', color: '#9ab', fontSize: 12, cursor: 'pointer' }}>Cerrar</button>
+          {!asPage && (
+            <button type="button" onClick={() => setOpen(false)}
+              style={{ width: '100%', padding: 8, marginTop: 8, borderRadius: 9, border: '1px solid #2a3138', background: 'none', color: '#9ab', fontSize: 12, cursor: 'pointer' }}>Cerrar</button>
+          )}
         </form>
       ) : (
-        <div ref={boxRef} style={{ width: '100%', maxWidth: 580 }} />
+        <div ref={boxRef} style={{ width: '100%', maxWidth: asPage ? '100%' : 580, height: asPage ? '100%' : undefined }} />
       )}
     </div>
   );
 }
 
 /* ── Reproductor (vanilla) montado dentro de la web, apuntando al servidor del portal ── */
-function montarPlayer(root: HTMLDivElement, token: string, onAuthFail: () => void): () => void {
+function montarPlayer(root: HTMLDivElement, token: string, onAuthFail: () => void, asPage = false): () => void {
   const w = window as any;
   let COLA: any[] = [], VISTA: any[] = [], LISTAS: any[] = [], vista = 'bib', idx = -1, shuffle = false, repeat = false;
   const audio = new Audio(); audio.preload = 'metadata'; audio.volume = 0.9;
@@ -98,11 +115,11 @@ function montarPlayer(root: HTMLDivElement, token: string, onAuthFail: () => voi
   async function jget(p: string) { const r = await fetch(api(p), { headers: H() }); if (r.status === 401) { onAuthFail(); throw new Error('auth'); } return r.json(); }
 
   root.innerHTML =
-    '<div style="background:#0e1114;border:1px solid rgba(29,185,84,.25);border-radius:16px;width:100%;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px -30px #000;font-family:system-ui,sans-serif;">' +
+    '<div style="background:#0e1114;' + (asPage ? 'border:none;border-radius:0;height:100vh;max-height:100vh;' : 'border:1px solid rgba(29,185,84,.25);border-radius:16px;max-height:90vh;') + 'width:100%;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px -30px #000;font-family:system-ui,sans-serif;">' +
       '<div style="background:linear-gradient(135deg,#0c1f14,#123a22);padding:.8rem 1.1rem;display:flex;align-items:center;gap:10px;">' +
         '<span style="font-size:20px;">🎵</span><div style="flex:1;"><div style="font-size:15px;font-weight:800;color:#1DB954;">Spoty-Quuantica</div><div style="font-size:10px;color:#8aa;">Tu música, en tu servidor · solo tú</div></div>' +
         '<label style="padding:6px 12px;font-size:11px;font-weight:700;background:#1DB954;color:#04210f;border-radius:20px;cursor:pointer;">➕ Subir<input type="file" accept="audio/*" multiple style="display:none;" onchange="spqSubir(this)"></label>' +
-        '<button onclick="window.__spqClose&&window.__spqClose()" style="background:none;border:1px solid #345;color:#9ab;border-radius:8px;padding:6px 11px;cursor:pointer;">✕</button>' +
+        (asPage ? '' : '<button onclick="window.__spqClose&&window.__spqClose()" style="background:none;border:1px solid #345;color:#9ab;border-radius:8px;padding:6px 11px;cursor:pointer;">✕</button>') +
       '</div>' +
       '<div id="spq-chips" style="display:flex;gap:6px;overflow-x:auto;padding:.55rem .8rem;border-bottom:1px solid #1a1f24;background:#0b0e11;"></div>' +
       '<div id="spq-head" style="padding:.4rem .8rem 0;"></div>' +
