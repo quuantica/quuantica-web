@@ -77,16 +77,28 @@ export default function Header() {
           </a>
         </div>
 
-        <button
-          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-          onClick={() => {
-            sfx.click();
-            setOpen((v) => !v);
-          }}
-          className="lg:hidden p-2 text-brand-100 rounded-lg hover:bg-white/[.06]"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        <div className="lg:hidden flex items-center gap-1">
+          {/* Acceso al reproductor en móvil */}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('spq-open'))}
+            aria-label="Música"
+            title="Spoty-Quuantica"
+            className="text-lg leading-none p-2 bg-transparent border-0 cursor-pointer text-brand-100/50 hover:text-brand-100"
+          >
+            🔊
+          </button>
+          <button
+            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+            onClick={() => {
+              sfx.click();
+              setOpen((v) => !v);
+            }}
+            className="p-2 text-brand-100 rounded-lg hover:bg-white/[.06]"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
