@@ -17,7 +17,6 @@ import BackgroundGrid from './BackgroundGrid';
 import ParticleNetwork from './ParticleNetwork';
 import Logo from './Logo';
 import IngresoClientes from './IngresoClientes';
-import AmorAmistad from './AmorAmistad';
 import { sfx } from '@/lib/sounds';
 import { QUUANTICA } from '@/lib/config';
 
@@ -114,9 +113,8 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Amor y Amistad (izquierda) + Ventana de ingreso (corrida a la derecha) */}
-          <div className="lg:order-1 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-6">
-            <AmorAmistad />
+          {/* Ventana de ingreso — a la izquierda en escritorio, bajo el logo */}
+          <div className="lg:order-1">
             <IngresoClientes />
           </div>
         </div>
