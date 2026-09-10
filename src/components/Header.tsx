@@ -57,6 +57,17 @@ export default function Header() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
+          {/* Acceso discreto al reproductor personal (abre el portal ya logueado) */}
+          <a
+            href="https://app.quuantica.com/#musica"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Música"
+            title="Spoty-Quuantica"
+            className="text-base leading-none opacity-20 hover:opacity-90 transition-opacity select-none"
+          >
+            🔊
+          </a>
           <a
             href="#agendar"
             onClick={() => sfx.click()}
