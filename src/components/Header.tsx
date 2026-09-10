@@ -57,16 +57,15 @@ export default function Header() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
-          {/* Acceso discreto al reproductor personal (se abre en la misma web) */}
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent('spq-open'))}
+          {/* Acceso discreto al reproductor personal (abre la app /musica, instalable) */}
+          <a
+            href="/musica"
             aria-label="Música"
             title="Spoty-Quuantica"
-            className="text-base leading-none opacity-20 hover:opacity-90 transition-opacity select-none bg-transparent border-0 p-0 cursor-pointer"
+            className="text-base leading-none opacity-20 hover:opacity-90 transition-opacity select-none cursor-pointer"
           >
             🔊
-          </button>
+          </a>
           <a
             href="#agendar"
             onClick={() => sfx.click()}
@@ -78,16 +77,15 @@ export default function Header() {
         </div>
 
         <div className="lg:hidden flex items-center gap-1">
-          {/* Acceso al reproductor en móvil */}
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent('spq-open'))}
+          {/* Acceso al reproductor en móvil (abre la app /musica, instalable) */}
+          <a
+            href="/musica"
             aria-label="Música"
             title="Spoty-Quuantica"
-            className="text-lg leading-none p-2 bg-transparent border-0 cursor-pointer text-brand-100/50 hover:text-brand-100"
+            className="text-lg leading-none p-2 cursor-pointer text-brand-100/50 hover:text-brand-100"
           >
             🔊
-          </button>
+          </a>
           <button
             aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
             onClick={() => {
