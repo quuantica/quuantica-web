@@ -158,7 +158,19 @@ export default function SpotyPlayer({ asPage = false }: { asPage?: boolean }) {
 function montarPlayer(root: HTMLDivElement, token: string, onAuthFail: () => void, asPage = false): () => void {
   const w = window as any;
   let COLA: any[] = [], VISTA: any[] = [], LISTAS: any[] = [], vista = 'bib', idx = -1, shuffle = false, repeat = false;
+  let motor = 'audio', ytPlayer: any = null, tickTimer: any = null;
   const audio = new Audio(); audio.preload = 'metadata'; audio.volume = 0.9;
+  const esYT = (c: any) => c && c.tipo === 'youtube' && c.youtube_id;
+  const sonando = () => motor === 'yt' ? !!(ytPlayer && ytPlayer.getPlayerState && ytPlayer.getPlayerState() === 1) : !audio.paused;
+  function ytId(url: string): string | null {
+    const s = String(url || '').trim(); let m: any;
+    if ((m = s.match(/[?&]v=([\w-]{11})/))) return m[1];
+    if ((m = s.match(/youtu\.be\/([\w-]{11})/))) return m[1];
+    if ((m = s.match(/\/shorts\/([\w-]{11})/))) return m[1];
+    if ((m = s.match(/\/embed\/([\w-]{11})/))) return m[1];
+    if (/^[\w-]{11}$/.test(s)) return s;
+    return null;
+  }
   const esc = (s: any) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' } as any)[c]);
   const fmt = (s: number) => { s = Math.floor(s || 0); const m = Math.floor(s / 60), x = s % 60; return m + ':' + (x < 10 ? '0' : '') + x; };
   const H = () => ({ Authorization: 'Bearer ' + token });
@@ -202,9 +214,12 @@ function montarPlayer(root: HTMLDivElement, token: string, onAuthFail: () => voi
       '<div style="display:flex;align-items:center;gap:10px;padding:14px 16px 10px;">' +
         '<div style="width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#1DB954,#0c6b30);display:flex;align-items:center;justify-content:center;font-size:15px;">🎵</div>' +
         '<div style="flex:1;font-size:16px;font-weight:800;letter-spacing:-.02em;">Spoty-Quuantica</div>' +
-        '<label style="padding:7px 14px;font-size:12px;font-weight:700;background:#1DB954;color:#000;border-radius:20px;cursor:pointer;">＋ Subir<input type="file" accept="audio/*" multiple style="display:none;" onchange="spqSubir(this)"></label>' +
+        '<button onclick="spqYoutube()" style="padding:7px 12px;font-size:12px;font-weight:700;background:#ff0000;color:#fff;border:none;border-radius:20px;cursor:pointer;white-space:nowrap;">＋ YouTube</button>' +
+        '<label style="padding:7px 12px;font-size:12px;font-weight:700;background:#1DB954;color:#000;border-radius:20px;cursor:pointer;white-space:nowrap;">＋ Subir<input type="file" accept="audio/*" multiple style="display:none;" onchange="spqSubir(this)"></label>' +
         (asPage ? '' : '<button onclick="window.__spqClose&&window.__spqClose()" style="background:none;border:none;color:#b3b3b3;font-size:20px;cursor:pointer;padding:2px 6px;">✕</button>') +
       '</div>' +
+      // área de video (aparece solo cuando suena un enlace de YouTube)
+      '<div id="spq-video" style="display:none;background:#000;padding:0 16px 8px;"><div style="position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000;"><div id="spq-yt" style="position:absolute;inset:0;width:100%;height:100%;"></div></div></div>' +
       // chips
       '<div id="spq-chips" style="display:flex;gap:8px;overflow-x:auto;padding:4px 16px 12px;"></div>' +
       // header (playlist banner)
@@ -239,16 +254,63 @@ function montarPlayer(root: HTMLDivElement, token: string, onAuthFail: () => voi
   audio.onended = () => { if (repeat) { audio.currentTime = 0; audio.play(); } else w.spqNext(); };
   audio.onplay = () => { const p = $('spq-pp'); if (p) p.textContent = '⏸'; render(); };
   audio.onpause = () => { const p = $('spq-pp'); if (p) p.textContent = '▶'; render(); };
-  ($('spq-seek') as HTMLInputElement).oninput = function (this: HTMLInputElement) { if (audio.duration) audio.currentTime = (+this.value) / 1000 * audio.duration; };
+  ($('spq-seek') as HTMLInputElement).oninput = function (this: HTMLInputElement) {
+    if (motor === 'yt') { if (ytPlayer && ytPlayer.getDuration) { const d = ytPlayer.getDuration(); if (d) ytPlayer.seekTo(d * (+this.value) / 1000, true); } }
+    else if (audio.duration) audio.currentTime = (+this.value) / 1000 * audio.duration;
+  };
   const vol = $('spq-vol') as HTMLInputElement; vol.style.background = 'linear-gradient(90deg,#fff 90%,#4d4d4d 90%)';
-  vol.oninput = function (this: HTMLInputElement) { audio.volume = (+this.value) / 100; this.style.background = 'linear-gradient(90deg,#fff ' + this.value + '%,#4d4d4d ' + this.value + '%)'; };
+  vol.oninput = function (this: HTMLInputElement) { audio.volume = (+this.value) / 100; try { if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(+this.value); } catch {} this.style.background = 'linear-gradient(90deg,#fff ' + this.value + '%,#4d4d4d ' + this.value + '%)'; };
 
   function pintarActual() {
     const t = $('spq-tit'), a = $('spq-art'), nc = $('spq-nowcov');
     if (idx >= 0 && COLA[idx]) { if (t) t.textContent = COLA[idx].titulo; if (a) a.textContent = COLA[idx].artista || ''; if (nc) nc.innerHTML = cover(COLA[idx].titulo, 44); }
     else { if (t) t.textContent = 'Nada sonando'; if (a) a.textContent = ''; if (nc) nc.innerHTML = cover('', 44); }
   }
-  function tocar(i: number) { idx = i; const c = COLA[i]; audio.src = api('/api/musica/' + c.id + '/stream?token=' + encodeURIComponent(token)); audio.play().catch(() => {}); pintarActual(); render(); }
+  function showVideo(on: boolean) { const v = $('spq-video'); if (v) v.style.display = on ? 'block' : 'none'; }
+  function startTick() { stopTick(); tickTimer = setInterval(() => {
+    if (motor !== 'yt' || !ytPlayer || !ytPlayer.getDuration) return;
+    const d = ytPlayer.getDuration(), t = ytPlayer.getCurrentTime ? ytPlayer.getCurrentTime() : 0;
+    const sk = $('spq-seek'), cu = $('spq-cur'), du = $('spq-dur');
+    if (sk && d) { const p = t / d * 1000; sk.value = String(Math.round(p)); sk.style.background = 'linear-gradient(90deg,#1DB954 ' + (p / 10) + '%,#4d4d4d ' + (p / 10) + '%)'; }
+    if (cu) cu.textContent = fmt(t); if (du && d) du.textContent = fmt(d);
+  }, 500); }
+  function stopTick() { if (tickTimer) { clearInterval(tickTimer); tickTimer = null; } }
+  function ytEnsure(): Promise<void> {
+    return new Promise((resolve) => {
+      if (w.YT && w.YT.Player) { resolve(); return; }
+      if (!document.getElementById('spq-yt-api')) { const s = document.createElement('script'); s.id = 'spq-yt-api'; s.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(s); }
+      const t = setInterval(() => { if (w.YT && w.YT.Player) { clearInterval(t); resolve(); } }, 150);
+      setTimeout(() => { clearInterval(t); resolve(); }, 10000);
+    });
+  }
+  async function ytPlay(vid: string) {
+    await ytEnsure(); if (!w.YT || !w.YT.Player) { const b = $('spq-bib'); if (b) b.insertAdjacentHTML('afterbegin', '<div style="color:#e88;font-size:12px;padding:.6rem 1rem;">No se pudo cargar YouTube (¿sin internet?).</div>'); return; }
+    showVideo(true);
+    if (!ytPlayer) {
+      ytPlayer = new w.YT.Player('spq-yt', {
+        width: '100%', height: '100%', videoId: vid,
+        playerVars: { autoplay: 1, playsinline: 1, rel: 0, modestbranding: 1 },
+        events: {
+          onReady: (e: any) => { try { e.target.setVolume(Math.round(audio.volume * 100)); } catch {} try { e.target.playVideo(); } catch {} },
+          onStateChange: (e: any) => {
+            const pp = $('spq-pp'); if (pp) pp.textContent = e.data === 1 ? '⏸' : '▶';
+            if (e.data === w.YT.PlayerState.ENDED) { if (repeat) { try { ytPlayer.seekTo(0); ytPlayer.playVideo(); } catch {} } else w.spqNext(); }
+            render();
+          },
+        },
+      });
+    } else { try { ytPlayer.loadVideoById(vid); } catch {} }
+  }
+  function tocar(i: number) {
+    idx = i; const c = COLA[i];
+    if (esYT(c)) { motor = 'yt'; try { audio.pause(); } catch {} ytPlay(c.youtube_id); startTick(); }
+    else {
+      motor = 'audio'; stopTick(); showVideo(false);
+      try { if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo(); } catch {}
+      audio.src = api('/api/musica/' + c.id + '/stream?token=' + encodeURIComponent(token)); audio.play().catch(() => {});
+    }
+    pintarActual(); render();
+  }
 
   async function listasCargar() {
     try { const j = await jget('/api/musica-listas'); LISTAS = j.listas || []; } catch { LISTAS = []; }
@@ -288,7 +350,7 @@ function montarPlayer(root: HTMLDivElement, token: string, onAuthFail: () => voi
       b.innerHTML = VISTA.map((c, i) => {
         const son = idx >= 0 && COLA[idx] && COLA[idx].id === c.id;
         const left = son
-          ? '<div style="width:44px;height:44px;position:relative;flex-shrink:0;">' + cover(c.titulo, 44) + '<div style="position:absolute;inset:0;background:rgba(0,0,0,.45);border-radius:5px;display:flex;align-items:center;justify-content:center;">' + (audio.paused ? '<span style="color:#1DB954;font-size:14px;">▶</span>' : '<span class="spq-eq"><i></i><i></i><i></i></span>') + '</div></div>'
+          ? '<div style="width:44px;height:44px;position:relative;flex-shrink:0;">' + cover(c.titulo, 44) + '<div style="position:absolute;inset:0;background:rgba(0,0,0,.45);border-radius:5px;display:flex;align-items:center;justify-content:center;">' + (!sonando() ? '<span style="color:#1DB954;font-size:14px;">▶</span>' : '<span class="spq-eq"><i></i><i></i><i></i></span>') + '</div></div>'
           : cover(c.titulo, 44);
         const acc = enBib
           ? '<button class="spq-ib" onclick="event.stopPropagation();spqAgregarMenu(\'' + c.id + '\',event)" title="Agregar a lista">＋</button><button class="spq-ib" onclick="event.stopPropagation();spqBorrar(\'' + c.id + '\')" title="Eliminar">🗑</button>'
@@ -305,7 +367,22 @@ function montarPlayer(root: HTMLDivElement, token: string, onAuthFail: () => voi
   w.spqVer = (v: string) => { vista = v; listasCargar(); render(); };
   w.spqPlayVista = (i: number) => { if (i < 0 || i >= VISTA.length) return; COLA = VISTA.slice(); tocar(i); };
   w.spqReproducirLista = () => { if (VISTA.length) { COLA = VISTA.slice(); tocar(0); } };
-  w.spqPlayPause = () => { if (idx < 0 && VISTA.length) { w.spqPlayVista(0); return; } if (audio.paused) audio.play(); else audio.pause(); };
+  w.spqPlayPause = () => {
+    if (idx < 0 && VISTA.length) { w.spqPlayVista(0); return; }
+    if (motor === 'yt' && ytPlayer) { try { if (ytPlayer.getPlayerState() === 1) ytPlayer.pauseVideo(); else ytPlayer.playVideo(); } catch {} return; }
+    if (audio.paused) audio.play(); else audio.pause();
+  };
+  w.spqYoutube = async () => {
+    const url = prompt('Pega el enlace de YouTube de la canción (o su ID):'); if (!url) return;
+    const vid = ytId(url); if (!vid) { alert('No reconocí el enlace. Copia el enlace completo del video de YouTube.'); return; }
+    const titulo = prompt('Nombre de la canción:', ''); if (!titulo || !titulo.trim()) return;
+    const artista = (prompt('Artista (opcional):', '') || '').trim();
+    try {
+      const r = await fetch(api('/api/musica-youtube'), { method: 'POST', headers: HJ(), body: JSON.stringify({ youtubeId: vid, titulo: titulo.trim(), artista }) });
+      if (!r.ok) { const j = await r.json().catch(() => ({})); alert('No se pudo agregar: ' + ((j as any).error || r.status)); return; }
+      vista = 'bib'; listasCargar(); render();
+    } catch { alert('No hay conexión con el servidor'); }
+  };
   w.spqNext = () => { if (!COLA.length) return; tocar(shuffle ? Math.floor(Math.random() * COLA.length) : (idx + 1) % COLA.length); };
   w.spqPrev = () => { if (!COLA.length) return; if (audio.currentTime > 3) { audio.currentTime = 0; return; } tocar((idx - 1 + COLA.length) % COLA.length); };
   w.spqShuffle = () => { shuffle = !shuffle; const x = $('spq-shuf'); if (x) x.style.color = shuffle ? '#1DB954' : '#b3b3b3'; };
@@ -354,5 +431,5 @@ function montarPlayer(root: HTMLDivElement, token: string, onAuthFail: () => voi
   }
 
   pintarActual(); listasCargar(); render();
-  return () => { try { audio.pause(); audio.src = ''; } catch {}; const m = document.getElementById('spq-menu'); if (m) m.remove(); };
+  return () => { try { audio.pause(); audio.src = ''; } catch {}; stopTick(); try { if (ytPlayer && ytPlayer.destroy) ytPlayer.destroy(); } catch {}; ytPlayer = null; const m = document.getElementById('spq-menu'); if (m) m.remove(); };
 }
