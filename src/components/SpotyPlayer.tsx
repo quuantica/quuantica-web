@@ -13,10 +13,7 @@ const API = 'https://app.quuantica.com';
 export default function SpotyPlayer({ asPage = false }: { asPage?: boolean }) {
   const [open, setOpen] = useState(asPage);
   const [token, setToken] = useState<string | null>(null);
-  const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
-  const [codigo, setCodigo] = useState('');
-  const [mfa, setMfa] = useState(false);
+  const [pin, setPin] = useState('');
   const [err, setErr] = useState('');
   const [cargando, setCargando] = useState(false);
   const [deferred, setDeferred] = useState<any>(null);
@@ -25,8 +22,7 @@ export default function SpotyPlayer({ asPage = false }: { asPage?: boolean }) {
   const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    try { const t = localStorage.getItem('spq_token'); if (t) setToken(t); } catch {}
-    const onOpen = () => setOpen(true);
+    const onOpen = () => { setToken(null); setPin(''); setErr(''); setOpen(true); };
     window.addEventListener('spq-open', onOpen);
     (window as any).__spqClose = () => { if (!asPage) setOpen(false); };
     const onBip = (e: any) => { e.preventDefault(); setDeferred(e); };
@@ -60,23 +56,18 @@ export default function SpotyPlayer({ asPage = false }: { asPage?: boolean }) {
     return cleanup;
   }, [open, token, asPage]);
 
-  async function login(e?: React.FormEvent) {
+  async function pinEntrar(e?: React.FormEvent) {
     if (e) e.preventDefault();
+    if (pin.length < 4) { setErr('Escribe tu PIN de 4 dígitos'); return; }
     setErr(''); setCargando(true);
     try {
-      const r = await fetch(API + '/api/login', {
+      const r = await fetch(API + '/api/musica-pin', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password: pass, codigo: codigo.trim() || undefined }),
+        body: JSON.stringify({ pin }),
       });
       const j = await r.json();
-      if (r.ok && j.token) {
-        if (j.usuario?.rol !== 'admin') { setErr('Este reproductor es solo para tu cuenta de administrador.'); setCargando(false); return; }
-        try { localStorage.setItem('spq_token', j.token); } catch {}
-        setToken(j.token); setPass(''); setCodigo(''); setMfa(false);
-      } else if (j.mfaRequerido) {
-        setMfa(true);
-        setErr(codigo.trim() ? (j.error || 'El código no es correcto') : '');
-      } else setErr(j.error || 'No se pudo ingresar');
+      if (r.ok && j.token) { setToken(j.token); setPin(''); }
+      else { setErr(j.error || 'PIN incorrecto'); setPin(''); }
     } catch { setErr('No hay conexión con el servidor'); }
     setCargando(false);
   }
@@ -122,24 +113,18 @@ export default function SpotyPlayer({ asPage = false }: { asPage?: boolean }) {
         </div>
       )}
       {!token ? (
-        <form onSubmit={login} style={{ background: '#181818', borderRadius: 12, width: '100%', maxWidth: 360, padding: '2rem 1.6rem', color: '#fff', boxShadow: '0 30px 80px -30px #000' }}>
+        <form onSubmit={pinEntrar} style={{ background: '#181818', borderRadius: 12, width: '100%', maxWidth: 340, padding: '2rem 1.6rem', color: '#fff', boxShadow: '0 30px 80px -30px #000' }}>
           <div style={{ textAlign: 'center', marginBottom: 6 }}>
             <div style={{ width: 54, height: 54, margin: '0 auto', borderRadius: 12, background: 'linear-gradient(135deg,#1DB954,#0c6b30)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🎵</div>
           </div>
           <div style={{ fontSize: 21, fontWeight: 800, textAlign: 'center', marginTop: 10 }}>Spoty-Quuantica</div>
-          <div style={{ fontSize: 12.5, color: '#b3b3b3', textAlign: 'center', marginBottom: 20 }}>Ingresa con tu cuenta de administrador</div>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Correo" autoComplete="username" style={inputStyle} />
-          <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="Contraseña" autoComplete="current-password" style={inputStyle} />
-          {mfa && (
-            <>
-              <div style={{ fontSize: 11, color: '#b3b3b3', marginBottom: 7 }}>Tu cuenta pide segundo factor. Abre tu app (Google Authenticator / Authy) y escribe el código de 6 dígitos.</div>
-              <input value={codigo} onChange={(e) => setCodigo(e.target.value.replace(/\D/g, '').slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" placeholder="Código de 6 dígitos"
-                style={{ ...inputStyle, border: '1px solid #1DB954', fontSize: 18, letterSpacing: '.35em', textAlign: 'center' }} />
-            </>
-          )}
-          {err && <div style={{ fontSize: 12, color: '#ff6b6b', marginBottom: 10 }}>{err}</div>}
-          <button type="submit" disabled={cargando}
-            style={{ width: '100%', padding: 13, borderRadius: 24, border: 'none', background: '#1DB954', color: '#000', fontWeight: 800, fontSize: 14, cursor: 'pointer', marginTop: 4 }}>
+          <div style={{ fontSize: 12.5, color: '#b3b3b3', textAlign: 'center', marginBottom: 20 }}>Escribe tu PIN para entrar</div>
+          <input value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 4))} onFocus={() => setErr('')}
+            type="password" inputMode="numeric" autoComplete="off" placeholder="••••" autoFocus
+            style={{ ...inputStyle, fontSize: 30, letterSpacing: '.6em', textAlign: 'center', padding: '14px 14px' }} />
+          {err && <div style={{ fontSize: 12, color: '#ff6b6b', marginBottom: 10, textAlign: 'center' }}>{err}</div>}
+          <button type="submit" disabled={cargando || pin.length < 4}
+            style={{ width: '100%', padding: 13, borderRadius: 24, border: 'none', background: pin.length < 4 ? '#155e34' : '#1DB954', color: '#000', fontWeight: 800, fontSize: 14, cursor: pin.length < 4 ? 'default' : 'pointer', marginTop: 4 }}>
             {cargando ? 'Entrando…' : 'Entrar a mi música'}
           </button>
           {!asPage && (
