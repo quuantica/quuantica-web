@@ -21,6 +21,7 @@ export default function SpotyPlayer({ asPage = false }: { asPage?: boolean }) {
   const [cargando, setCargando] = useState(false);
   const [deferred, setDeferred] = useState<any>(null);
   const [instalada, setInstalada] = useState(false);
+  const [ayuda, setAyuda] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,11 +41,15 @@ export default function SpotyPlayer({ asPage = false }: { asPage?: boolean }) {
   }, [asPage]);
 
   async function instalar() {
-    if (!deferred) return;
-    deferred.prompt();
-    try { await deferred.userChoice; } catch {}
-    setDeferred(null);
+    if (deferred) {
+      deferred.prompt();
+      try { await deferred.userChoice; } catch {}
+      setDeferred(null);
+    } else {
+      setAyuda(true); // navegador sin instalación automática (iPhone, o Android que no lo ofrece): mostrar pasos
+    }
   }
+  const esIOS = typeof navigator !== 'undefined' && /iphone|ipad|ipod/i.test(navigator.userAgent);
 
   useEffect(() => {
     if (!open || !token || !boxRef.current) return;
@@ -85,11 +90,36 @@ export default function SpotyPlayer({ asPage = false }: { asPage?: boolean }) {
       onClick={(e) => { if (!asPage && e.target === e.currentTarget) setOpen(false); }}
       style={{ position: 'fixed', inset: 0, zIndex: 9999, background: asPage ? '#121212' : 'rgba(0,0,0,.7)', display: 'flex', alignItems: asPage ? 'stretch' : 'center', justifyContent: 'center', padding: asPage ? 0 : '1rem', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif' }}
     >
-      {deferred && !instalada && (
+      {!instalada && (
         <button onClick={instalar}
           style={{ position: 'fixed', top: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 10003, background: '#1DB954', color: '#000', border: 'none', borderRadius: 22, padding: '9px 18px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 24px rgba(0,0,0,.5)' }}>
           📲 Instalar app
         </button>
+      )}
+      {ayuda && (
+        <div onClick={(e) => { if (e.target === e.currentTarget) setAyuda(false); }}
+          style={{ position: 'fixed', inset: 0, zIndex: 10004, background: 'rgba(0,0,0,.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div style={{ background: '#181818', borderRadius: 12, maxWidth: 340, width: '100%', padding: '1.4rem', color: '#fff' }}>
+            <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>📲 Instalar en tu celular</div>
+            {esIOS ? (
+              <div style={{ fontSize: 13.5, lineHeight: 1.6, color: '#d0d0d0' }}>
+                En iPhone (Safari):<br />
+                1. Toca el botón <b>Compartir</b> (el cuadro con la flecha ↑) abajo.<br />
+                2. Baja y toca <b>“Agregar a inicio”</b>.<br />
+                3. Confirma <b>“Agregar”</b>. Quedará el ícono <b>Spoty-Q</b> en tu pantalla.
+              </div>
+            ) : (
+              <div style={{ fontSize: 13.5, lineHeight: 1.6, color: '#d0d0d0' }}>
+                En Android (Chrome):<br />
+                1. Abre el menú <b>⋮</b> (arriba a la derecha).<br />
+                2. Toca <b>“Instalar aplicación”</b> o <b>“Agregar a pantalla de inicio”</b>.<br />
+                3. Confirma. Quedará el ícono <b>Spoty-Q</b> en tu pantalla.
+              </div>
+            )}
+            <button onClick={() => setAyuda(false)}
+              style={{ width: '100%', marginTop: 16, padding: 11, borderRadius: 22, border: 'none', background: '#1DB954', color: '#000', fontWeight: 800, fontSize: 13.5, cursor: 'pointer' }}>Entendido</button>
+          </div>
+        </div>
       )}
       {!token ? (
         <form onSubmit={login} style={{ background: '#181818', borderRadius: 12, width: '100%', maxWidth: 360, padding: '2rem 1.6rem', color: '#fff', boxShadow: '0 30px 80px -30px #000' }}>
