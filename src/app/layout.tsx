@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     template: '%s | QUUANTICA',
   },
   description:
-    'QUUANTICA implementa Sistemas de Gestión SST, auditorías, plan vial, normativa legal y sistemas de calidad para empresas colombianas. Plataforma tecnológica 100% web con capacitaciones digitales certificadas. Cobertura nacional — Sabana Norte, Chía.',
+    'QUUANTICA implementa Sistemas de Gestión SST, auditorías, plan vial, normativa legal y sistemas de calidad para empresas colombianas. Plataforma tecnológica 100% web con capacitaciones digitales certificadas. Cobertura nacional — Cajicá, Cundinamarca.',
   keywords: [
     'QUUANTICA',
     'SG-SST',
@@ -41,8 +41,9 @@ export const metadata: Metadata = {
     'normativa laboral Colombia',
     'sistemas de calidad',
     'capacitaciones digitales',
-    'Sabana Norte',
-    'Chía Colombia',
+    'Cajicá',
+    'Cundinamarca',
+    'SG-SST Cajicá',
     'Ministerio del Trabajo',
     'cumplimiento normativo',
   ],
@@ -54,14 +55,14 @@ export const metadata: Metadata = {
     url: 'https://www.quuantica.com',
     title: 'QUUANTICA — Servicios Tecnológicos para Sistemas de Gestión SST',
     description:
-      'QUUANTICA implementa Sistemas de Gestión SST, auditorías, plan vial, normativa legal y sistemas de calidad para empresas colombianas. Cobertura nacional — Sabana Norte, Chía.',
+      'QUUANTICA implementa Sistemas de Gestión SST, auditorías, plan vial, normativa legal y sistemas de calidad para empresas colombianas. Cobertura nacional — Cajicá, Cundinamarca.',
     siteName: 'QUUANTICA',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'QUUANTICA — Servicios Tecnológicos para Sistemas de Gestión SST',
     description:
-      'Implementamos Sistemas de Gestión SST, auditorías, plan vial y sistemas de calidad. Plataforma 100% web. Cobertura nacional — Sabana Norte, Chía.',
+      'Implementamos Sistemas de Gestión SST, auditorías, plan vial y sistemas de calidad. Plataforma 100% web. Cobertura nacional — Cajicá, Cundinamarca.',
   },
   robots: {
     index: true,
@@ -91,8 +92,9 @@ const schemaOrg = {
   email: 'quuantica@outlook.com',
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Chía',
-    addressRegion: 'Sabana Norte',
+    streetAddress: 'Calle 9 n.º 19C-93',
+    addressLocality: 'Cajicá',
+    addressRegion: 'Cundinamarca',
     addressCountry: 'CO',
   },
   areaServed: 'Colombia',
