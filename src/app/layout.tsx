@@ -19,7 +19,10 @@ const jetBrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://quuantica.com'),
+  // Dominio canónico = www (Vercel redirige quuantica.com → www.quuantica.com).
+  // Si aquí se declara el dominio sin www, Google ve "Página con redirección" y no indexa.
+  metadataBase: new URL('https://www.quuantica.com'),
+  alternates: { canonical: '/' },
   verification: {
     google: '6vbXYC4br0mvTSrFzUkymq6aceDzXQr92eiR_61NGHc',
   },
@@ -48,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_CO',
-    url: 'https://quuantica.com',
+    url: 'https://www.quuantica.com',
     title: 'QUUANTICA — Servicios Tecnológicos para Sistemas de Gestión SST',
     description:
       'QUUANTICA implementa Sistemas de Gestión SST, auditorías, plan vial, normativa legal y sistemas de calidad para empresas colombianas. Cobertura nacional — Sabana Norte, Chía.',
@@ -80,8 +83,8 @@ const schemaOrg = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   name: 'QUUANTICA Servicios Tecnológicos',
-  url: 'https://quuantica.com',
-  logo: 'https://quuantica.com/favicon.svg',
+  url: 'https://www.quuantica.com',
+  logo: 'https://www.quuantica.com/favicon.svg',
   description:
     'QUUANTICA implementa Sistemas de Gestión SST, auditorías, plan vial, normativa legal y sistemas de calidad para empresas colombianas. Plataforma tecnológica 100% web con capacitaciones digitales certificadas.',
   telephone: '+573167998542',

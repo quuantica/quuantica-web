@@ -1,42 +1,16 @@
 import { MetadataRoute } from 'next';
 
+// Solo URLs reales del dominio canónico (www). Google no indexa las anclas
+// (#seccion) como páginas aparte, y las URLs sin www redirigen: ambas cosas
+// hacían que Search Console reportara "Página con redirección".
+const BASE = 'https://www.quuantica.com';
+
 export default function sitemap(): MetadataRoute.Sitemap {
+  const hoy = new Date();
   return [
-    {
-      url: 'https://quuantica.com',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-    {
-      url: 'https://quuantica.com/#quienes-somos',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://quuantica.com/#plataforma',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://quuantica.com/#funciones',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://quuantica.com/#servicios',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://quuantica.com/#ia-aplicada',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
+    { url: `${BASE}/`, lastModified: hoy, changeFrequency: 'monthly', priority: 1 },
+    { url: `${BASE}/politica-privacidad`, lastModified: hoy, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BASE}/terminos-condiciones`, lastModified: hoy, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BASE}/tratamiento-datos`, lastModified: hoy, changeFrequency: 'yearly', priority: 0.3 },
   ];
 }

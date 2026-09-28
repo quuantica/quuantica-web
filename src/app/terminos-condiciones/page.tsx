@@ -2,6 +2,7 @@ import LegalPage from '@/components/LegalPage';
 import { QUUANTICA } from '@/lib/config';
 
 export const metadata = {
+  alternates: { canonical: '/terminos-condiciones' },
   title: 'Términos y condiciones | QUUANTICA',
   description:
     'Términos y condiciones de uso de los servicios y la plataforma de QUUANTICA Servicios Tecnológicos.',

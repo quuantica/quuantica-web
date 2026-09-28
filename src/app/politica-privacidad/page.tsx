@@ -2,6 +2,7 @@ import LegalPage from '@/components/LegalPage';
 import { QUUANTICA } from '@/lib/config';
 
 export const metadata = {
+  alternates: { canonical: '/politica-privacidad' },
   title: 'Política de privacidad | QUUANTICA',
   description:
     'Política de privacidad de QUUANTICA Servicios Tecnológicos. Tratamiento de datos personales conforme a la Ley 1581 de 2012 de Colombia.',

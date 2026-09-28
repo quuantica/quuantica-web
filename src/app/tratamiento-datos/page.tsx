@@ -1,6 +1,7 @@
 import LegalPage from '@/components/LegalPage';
 
 export const metadata = {
+  alternates: { canonical: '/tratamiento-datos' },
   title: 'Política de tratamiento de datos personales (Ley 1581/2012) | QUUANTICA',
   description:
     'Política de tratamiento de datos personales de QUUANTICA Servicios Tecnológicos S.A.S. (v2.0, código QTS-POL-PRD-001) conforme a la Ley 1581 de 2012 y el Decreto 1074 de 2015.',
