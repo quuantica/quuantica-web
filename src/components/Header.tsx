@@ -9,10 +9,10 @@ import { sfx } from '@/lib/sounds';
 const NAV = [
   { href: '#quienes-somos', label: 'Quiénes somos' },
   { href: '#plataforma', label: 'Plataforma' },
+  { href: '#a-la-medida', label: 'A la medida' },
   { href: '#funciones', label: 'Funciones' },
   { href: '#servicios', label: 'Servicios' },
   { href: '#ia', label: 'IA Aplicada' },
-  { href: '#agendar', label: 'Agendar' },
 ];
 
 export default function Header() {
@@ -49,7 +49,7 @@ export default function Header() {
               href={n.href}
               onMouseEnter={() => sfx.hover()}
               onClick={() => sfx.click()}
-              className="px-4 py-2 text-sm font-medium text-brand-100/80 hover:text-white rounded-lg hover:bg-white/[.04] transition-colors"
+              className="px-3 xl:px-4 py-2 text-[13px] xl:text-sm whitespace-nowrap font-medium text-brand-100/80 hover:text-white rounded-lg hover:bg-white/[.04] transition-colors"
             >
               {n.label}
             </a>

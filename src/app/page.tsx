@@ -5,6 +5,7 @@ import QuienesSomos from '@/components/QuienesSomos';
 import Estadisticas from '@/components/Estadisticas';
 import Servicios from '@/components/Servicios';
 import PlataformaDemo from '@/components/PlataformaDemo';
+import ALaMedida from '@/components/ALaMedida';
 import Funciones from '@/components/Funciones';
 import InteligenciaArtificial from '@/components/InteligenciaArtificial';
 import Beneficios from '@/components/Beneficios';
@@ -24,6 +25,7 @@ export default function HomePage() {
       <QuienesSomos />
       <Estadisticas />
       <PlataformaDemo />
+      <ALaMedida />
       <Funciones />
       <Servicios />
       <InteligenciaArtificial />

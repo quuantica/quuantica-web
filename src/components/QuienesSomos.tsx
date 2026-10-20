@@ -64,7 +64,7 @@ export default function QuienesSomos() {
           eyebrow="Quiénes somos"
           title="Construimos infraestructura digital para "
           highlight="empresas e instituciones."
-          subtitle="QUUANTICA es una compañía colombiana especializada en construir plataformas tecnológicas que centralizan la operación y elevan el cumplimiento normativo. Diseñamos software empresarial sólido, con inteligencia artificial integrada y seguridad institucional, listo para entornos de alta exigencia."
+          subtitle="QUUANTICA es una compañía colombiana con plataforma tecnológica propia. Integramos en un solo sistema la SST, el talento humano, la salud y medicina del trabajo, los contratistas y proveedores, las inspecciones y los sistemas de gestión, y lo moldeamos a la medida de cada empresa. Además desarrollamos proyectos de software a la medida, desde Cajicá y en expansión internacional."
         />
 
         <div className="grid md:grid-cols-2 gap-5 mt-14">
