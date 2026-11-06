@@ -27,7 +27,7 @@ export default function TratamientoDatosPage() {
       <p>Elaboró</p>
       <p>QUUANTICA SERVICIOS TECNOLÓGICOS S.A.S.</p>
       <p>Revisó</p>
-      <p>Isabel Rojas</p>
+      <p>QUUANTICA SERVICIOS TECNOLÓGICOS S.A.S.</p>
       <p>Aprobó</p>
       <p>Representante Legal</p>
       <p>Próxima revisión</p>
@@ -37,7 +37,7 @@ export default function TratamientoDatosPage() {
       <p>Aplicación</p>
       <p>Responsable / Encargado según el tratamiento</p>
       <h2>1. Identificación del responsable del tratamiento</h2>
-      <p>QUUANTICA SERVICIOS TECNOLÓGICOS S.A.S., identificada con NIT 902.095.588-8, con domicilio principal en Cajicá, Cundinamarca, representada legalmente por JULIAN DAVID CARMONA PRIETO, identificado con C.C. 1.310.075.581, es Responsable del Tratamiento respecto de los datos personales que recolecta y trata directamente para sus propias finalidades.</p>
+      <p>QUUANTICA SERVICIOS TECNOLÓGICOS S.A.S., identificada con NIT 902.095.588-8, con domicilio principal en Cajicá, Cundinamarca, es Responsable del Tratamiento respecto de los datos personales que recolecta y trata directamente para sus propias finalidades.</p>
       <p>Dato</p>
       <p>Información</p>
       <p>Razón social</p>
@@ -46,10 +46,6 @@ export default function TratamientoDatosPage() {
       <p>902.095.588-8</p>
       <p>Domicilio</p>
       <p>Cajicá, Cundinamarca</p>
-      <p>Representante legal</p>
-      <p>JULIAN DAVID CARMONA PRIETO</p>
-      <p>Documento</p>
-      <p>C.C. 1.310.075.581</p>
       <p>Correo de atención</p>
       <p>quuantica@outlook.com</p>
       <p>Teléfono / WhatsApp</p>
@@ -386,14 +382,14 @@ export default function TratamientoDatosPage() {
       <p>Firma</p>
       <p>Fecha</p>
       <p>Representante legal</p>
-      <p>JULIAN DAVID CARMONA PRIETO</p>
+      <p>QUUANTICA SERVICIOS TECNOLÓGICOS S.A.S.</p>
       <p>18/08/2026</p>
       <p>Revisión jurídica</p>
-      <p>JULIAN DAVID CARMONA PRIETO</p>
+      <p>QUUANTICA SERVICIOS TECNOLÓGICOS S.A.S.</p>
       <p>__________________</p>
       <p>18/08/2026</p>
       <p>Responsable interno de datos</p>
-      <p>Isnardo Carmona Ramirez</p>
+      <p>QUUANTICA SERVICIOS TECNOLÓGICOS S.A.S.</p>
       <p>____________________</p>
       <p>18/08/2026</p>
       <p>Código</p>

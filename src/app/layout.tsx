@@ -117,15 +117,8 @@ const schemaOrg = {
   areaServed: 'Colombia',
   sameAs: [
     'https://www.instagram.com/quuantica2026/',
-    'https://www.linkedin.com/in/isnardo-carmona-ram%C3%ADrez-6670b3417/',
     'https://www.facebook.com/profile.php?id=61590527382342',
   ],
-  founder: {
-    '@type': 'Person',
-    name: 'Isnardo Carmona Ramírez',
-    jobTitle: 'Gerente',
-    sameAs: 'https://www.linkedin.com/in/isnardo-carmona-ram%C3%ADrez-6670b3417/',
-  },
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Servicios QUUANTICA',
